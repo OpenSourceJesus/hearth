@@ -61,6 +61,14 @@ def default_system_prompt(tools: Iterable[Tool]) -> str:
     return "\n".join(lines)
 
 
+def split_leaked_reasoning(content: str) -> tuple[str, str]:
+    """Some models ignore think=False and write their reasoning into the reply, ending with </think>."""
+    head, sep, tail = content.rpartition("</think>")
+    if not sep:
+        return content, ""
+    return tail.strip(), head.replace("<think>", "").strip()
+
+
 class Agent:
     def __init__(
         self,
@@ -147,7 +155,8 @@ class Agent:
             if msg.tool_calls:
                 tool_calls.extend(msg.tool_calls)
         self.ui.on_message_end()
-        return "".join(content), "".join(thinking), tool_calls
+        text, leaked = split_leaked_reasoning("".join(content))
+        return text, "".join(thinking) + leaked, tool_calls
 
     def _run_tool(self, name: str, args: dict[str, Any]) -> str:
         tool = self.tools.get(name)

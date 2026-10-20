@@ -253,7 +253,7 @@ def build_parser() -> argparse.ArgumentParser:
         dest="think",
         action="store_const",
         const=False,
-        help="turn off the model's reasoning mode (faster)",
+        help="ask the model to skip its reasoning mode (not all models obey)",
     )
     parser.add_argument("--show-thinking", action="store_true", help="print the model's reasoning")
     parser.add_argument("--max-steps", type=int, default=15, help="max tool calls per reply")

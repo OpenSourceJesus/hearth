@@ -138,6 +138,15 @@ def test_interrupt_rolls_back_history():
     assert len(agent.messages) == 1
 
 
+def test_reasoning_leaked_into_content_is_moved_out_of_history():
+    client = FakeClient([[chunk("let me reason...\n</think>\n\n"), chunk("Four.")]])
+    agent = Agent(client, "m", RecordingUI())
+
+    assert agent.run("2+2?") == "Four."
+    assert agent.messages[-1].content == "Four."
+    assert agent.messages[-1].thinking == "let me reason..."
+
+
 def test_think_flag_is_forwarded_only_when_set():
     client = FakeClient([[chunk("a")], [chunk("b")]])
     Agent(client, "m", RecordingUI()).run("x")

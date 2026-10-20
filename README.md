@@ -101,8 +101,8 @@ Any Ollama model that supports tool calling works; browse them at
 
 Set your favorite permanently with an environment variable, e.g. `export HEARTH_MODEL=qwen3:8b`.
 
-Reasoning models like Qwen3 "think" before answering. Use `--no-think` for faster replies or
-`--show-thinking` to watch the reasoning.
+Reasoning models like Qwen3 "think" before answering. Hearth hides that reasoning behind a spinner;
+pass `--show-thinking` to watch it.
 
 ## Options
 
@@ -112,7 +112,7 @@ Reasoning models like Qwen3 "think" before answering. Use `--no-think` for faste
 | `--host`, `$OLLAMA_HOST` | Ollama server URL, if it's not on `localhost:11434`       |
 | `-y`, `--yes`            | Don't ask before writing files or running commands        |
 | `--no-tools`             | Disable all tools                                         |
-| `--think` / `--no-think` | Force the model's reasoning mode on or off                |
+| `--think` / `--no-think` | Ask the model to turn reasoning on or off (not all obey)  |
 | `--show-thinking`        | Print the model's reasoning                               |
 | `--max-steps N`          | Max tool calls per reply (default 15)                     |
 
@@ -124,7 +124,8 @@ Answers are written to stdout and everything else (tool activity, prompts) to st
 - **"Could not reach Ollama"**: open the Ollama app, or run `ollama serve` in another terminal.
 - **"does not support tools"**: the model can't call tools. Choose one from the list above or use
   `--no-tools`.
-- **Slow replies**: try a smaller model, or `--no-think`.
+- **Slow replies**: try a smaller model such as `qwen3:1.7b`. The first reply after starting is
+  slower because Ollama loads the model into memory.
 
 ## Development
 
